@@ -13,11 +13,12 @@ from django import template
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, is_valid_path
 from django.utils.encoding import force_text
 from django.utils.functional import Promise
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 
 register = template.Library()
 
@@ -26,6 +27,9 @@ from django.utils.translation import gettext_lazy as _
 
 if PY_VER != '2':
     from importlib import reload
+    from urllib.parse import parse_qsl
+else:
+    from urlparse import parse_qsl
 
 
 def unicode_to_str(u, encoding='utf-8'):
@@ -150,6 +154,11 @@ def get_config(key):
     return __get_config(key)
 
 
+@register.filter
+def get_value(value):
+    return value
+
+
 @register.simple_tag
 def get_version():
     return simpleui.get_version()
@@ -157,7 +166,7 @@ def get_version():
 
 @register.simple_tag
 def get_app_info():
-    return format_table({version: simpleui.get_version()})
+    return format_table({"version": simpleui.get_version()})
 
 
 def format_table(d):
@@ -248,15 +257,23 @@ def menus(context, _get_config=None):
 
     # 给每个菜单增加一个唯一标识，用于tab页判断
     eid = 1000
+    handler_eid(data, eid)
+    menus_string = json.dumps(data, cls=LazyEncoder)
+
+    # 把data放入session中，其他地方可以调用
+    if not isinstance(context, dict) and context.request:
+        context.request.session['_menus'] = menus_string
+
+    return '<script type="text/javascript">var menus={}</script>'.format(menus_string)
+
+
+def handler_eid(data, eid):
     for i in data:
         eid += 1
         i['eid'] = eid
         if 'models' in i:
-            for k in i.get('models'):
-                eid += 1
-                k['eid'] = eid
-
-    return '<script type="text/javascript">var menus={}</script>'.format(json.dumps(data, cls=LazyEncoder))
+            eid = handler_eid(i.get('models'), eid)
+    return eid
 
 
 def get_icon(obj, name=None):
@@ -269,12 +286,11 @@ def get_icon(obj, name=None):
         'User': 'far fa-user',
         'Group': 'fas fa-users-cog'
     }
+
     temp = _dict.get(obj)
     if not temp:
-        _default = __get_config('SIMPLEUI_DEFAULT_ICON')
-        if _default is None or _default:
-            return 'far fa-file'
-        return ''
+        return 'far fa-circle'
+
     return temp
 
 
@@ -453,9 +469,24 @@ def simple_version():
 @register.simple_tag(takes_context=True)
 def get_model_url(context):
     # reverse()
-    opts = context.get('opts')
-    key = 'admin:{}_{}_changelist'.format(opts.app_label, opts.model_name)
-    return reverse(key)
+    opts = context.get("opts")
+    key = "admin:{}_{}_changelist".format(opts.app_label, opts.model_name)
+    url = reverse(key)
+    preserved_filters = dict(parse_qsl(context.get("preserved_filters")))
+    if "_changelist_filters" in preserved_filters:
+        preserved_filters = preserved_filters["_changelist_filters"]
+        url = add_preserved_filters({"preserved_filters": preserved_filters, "opts": opts}, url)
+    return url
+
+
+@register.simple_tag(takes_context=True)
+def get_model_ajax_url(context):
+    opts = context.get("opts")
+    key = "admin:{}_{}_ajax".format(opts.app_label, opts.model_name)
+    try:
+        return reverse(key)
+    except:
+        pass
 
 
 @register.simple_tag
@@ -478,3 +509,18 @@ def get_boolean_choices():
         ('True', _('Yes')),
         ('False', _('No'))
     )
+
+
+@register.simple_tag(takes_context=True)
+def get_previous_url(context):
+    referer = context.request.META.get("HTTP_REFERER")
+    if not referer or context.request.META.get("PATH_INFO") in referer:
+        # return to model list
+        return get_model_url(context)
+    return context.request.META.get("HTTP_REFERER")
+
+
+@register.simple_tag(takes_context=True)
+def get_verbose_name_plural(context):
+    return context['cl'].model._meta.verbose_name_plural
+

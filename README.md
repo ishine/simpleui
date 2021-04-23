@@ -3,7 +3,7 @@
     <img alt="Simpleui" src="https://github.com/newpanjing/simpleui/raw/master/images/logo.png" width="140">
   </a>
 </p>
-<p align="center">让Django Admin简单而友好</p>
+<p align="center">让Django Admin简单而友好，20000+网站共同选择</p>
 <p align="center">
 Simple and friendly.
 Django admin theme the simpleui
@@ -26,6 +26,12 @@ Django admin theme the simpleui
 
 ---
 
+---
+<p align="center">
+<a href="https://simpleui.72wo.com/docs/simpleui" target="_blank">文档</a> |
+<a href="https://simpleui.72wo.com/docs/simpleui" target="_blank">Documents</a>
+</p>
+---
 <a href="https://www.88cto.com/admin/">
   <img alt="demo" src="https://github.com/newpanjing/simpleui/raw/master/images/%E4%B8%BB%E9%A1%B5.png" width="420" align="right" style="max-width: 50%">
 </a>
@@ -49,9 +55,9 @@ simpleui 特点
 Django Admin默认界面设计语言存在着的一些不足，比如色彩单一，大量线条的使用，分割化明显。将这些不足归类一下就是界面单调、雷同性明显、缺少惊喜。我们认为新的平台类视觉风格可以打破这些束缚，尝试一些新的探索，启发传统的设计认知,因此结合当下设计趋势，构思了Element+Django Admin的Simpleui。让Django Admin和Element产生完美的交互。配以最流行的后台设计风格，让Django Admin更加强大。
 
 ## QQ群
-+ QQ群号:786576510
++ QQ群号:873469913
 
-<img src='https://github.com/newpanjing/simpleui/raw/master/images/QQ%E7%BE%A4.jpg' width='200'>
+<img src='https://github.com/newpanjing/simpleui/raw/master/images/QQ2.jpg' width='200'>
 
 
 ## 文档
@@ -61,11 +67,11 @@ Django Admin默认界面设计语言存在着的一些不足，比如色彩单�
 
 👇👇👇👇👇👇👇👇👇👇👇
 
-👉 1.[simpleui文档教程使用说明](https://simpleui.88cto.com/docs/simpleui) 👈
+👉 1.[simpleui文档教程使用说明](https://simpleui.72wo.com/docs/simpleui) 👈
 
-👉 2.[simpleui文档教程使用说明](https://simpleui.88cto.com/docs/simpleui)👈
+👉 2.[simpleui文档教程使用说明](https://simpleui.72wo.com/docs/simpleui)👈
 
-👉  3.[simpleui文档教程使用说明](https://simpleui.88cto.com/docs/simpleui)👈
+👉  3.[simpleui文档教程使用说明](https://simpleui.72wo.com/docs/simpleui)👈
 
 👆👆👆👆👆👆👆👆👆👆👆
 
@@ -81,6 +87,14 @@ Django Admin默认界面设计语言存在着的一些不足，比如色彩单�
 + 地址：[https://www.88cto.com/admin/](https://www.88cto.com/admin/)
 + 用户名：demo
 + 密码：demo123456
+
+## Docker
+```shell
+docker pull newpanjing/simpleui_demo
+
+docker run -p 8080:8080 newpanjing/simpleui_demo
+```
+启动成功后访问：http://127.0.0.1:8080
 
 # simpleui 是什么？
 🚀simpleui 是django admin的一个主题 是一个基于element-ui+vue开发，重写和优化90%以上的页面。 
@@ -168,7 +182,7 @@ python setup.py sdist install
 
 
 # 登录页
-![](https://github.com/newpanjing/simpleui/raw/master/images/%E6%95%B0%E6%8D%AE%E9%A1%B5.png)
+![](https://github.com/newpanjing/simpleui/raw/master/images/%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2.png)
 
 # 主页
 ![](https://github.com/newpanjing/simpleui/raw/master/images/%E4%B8%BB%E9%A1%B5.png)
@@ -195,6 +209,7 @@ simpleui的发展离不开以下优秀贡献者的支持。如果您想为simple
 
 |Github|贡献范围|
 |------|------|
+|[@Abraverman666](https://github.com/Abraverman666)|Developers|
 |[@zhangzhibo1014](https://github.com/zhangzhibo1014)|英文文档翻译|
 |[@liaogx](https://github.com/liaogx)|bug修复|
 |[@shouyong](https://github.com/shouyong)|bug修复|
